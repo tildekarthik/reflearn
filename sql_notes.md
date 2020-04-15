@@ -1,6 +1,7 @@
 # SQL tutorial from SQLBolt for reference
+Original work for reference is : https://sqlbolt.com/
 
-This is intended as my cheatsheet for quick references
+This is intended as my cheatsheet for quick references for me to cut past - kindof like my notebook
 
 ## Simple query
 `SELECT * 

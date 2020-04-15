@@ -1,3 +1,8 @@
+# These are my course notes for later reference - Not my original work
+## The course is : Udemy : Python and Flask Bootcamp by Jose Portilla - He is the author
+### I use this as my cut-paste reference sheet - kindof snippets :-)
+
+
 # HTML Forms
 `<form action= method=>`
 - actions - points to where the submit should be sent - web address - not used in course
@@ -167,9 +172,7 @@ see below for sessions object used in thankyou, though not passed to it
 
 
 3. Flask forms 
-## - class definition - forms.py
-
-```
+## - class definition - forms.py```
 from flask_wtf import FlaskForm
 from wtforms import (StringField, BooleanField, DateTimeField,
                      RadioField,SelectField,TextField,
@@ -581,7 +584,7 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     email = StringField('Email',validators=[DataRequired(),Email()])
     username = StringField('UserName',validators=[DataRequired()])
-    password = PasswordField('Password',validators=[DataRequired(),EqualTo('pass_confirm',message='Passwords must match!')])
+    password = PasswordField('Password',validators=[DataRequired(),EqualTo('pFloginass_confirm',message='Passwords must match!')])
     pass_confirm = PasswordField('Confirm Password',validators=[DataRequired()])
     submit = SubmitField('Register!')
 
