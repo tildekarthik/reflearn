@@ -75,6 +75,14 @@ def puppylatin(name):
     return "<h1>Hi {}! Your puppylatin name is {} </h1>".format(name,pupname)
 
 ```
+- a trick later explained to use as integer the id if used in a query is like this: (also note the or 404 trick)
+
+```
+@blog_posts.route('/<int:blog_post_id>')
+def blog_post(blog_post_id):
+	blogpost = BlogPost.query.get_or_404(blog_post_id)
+```
+
 
 - Using requests with only action and no methods to process data
 
@@ -123,16 +131,21 @@ def page_not_found(e):
 {% endif %}
 ```
 
-3. Main applications - app.py
-- Imports and general 
-`from flask import Flask, render_template, session, redirect, url_for, session
+# Main applications - app.py
+- Imports and general
+
+```
+from flask import Flask, render_template, session, redirect, url_for, session
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'mysecretkey'`
+app.config['SECRET_KEY'] = 'mysecretkey'
+```
 
 - Feed the encapsuated form and do something on submit (also session is a global object available across the apps)
 
 Typically on a valid submit something is retrieved from db or something is written to the database. Here were using session object:
-`@app.route('/', methods=['GET', 'POST'])
+
+```
+@app.route('/', methods=['GET', 'POST'])
 def index():
     # Create instance of the form.
     form = InfoForm()
@@ -144,21 +157,29 @@ def index():
         session['food'] = form.food_choice.data
         session['feedback'] = form.feedback.data
         return redirect(url_for("thankyou"))
-    return render_template('01-home.html', form=form)`
+    return render_template('01-home.html', form=form)
+```
 
 see below for sessions object used in thankyou, though not passed to it
-`  <li>Breed: {{session['breed']}}</li>
+```
+<li>Breed: {{session['breed']}}</li>
   <li>Neutered: {{session['neutered']}}</li>
   <li>Mood: {{session['mood']}}</li>
   <li>Food: {{session['food']}}</li>
-  <li>Feedback: {{session['feedback']}}</li>`
+  <li>Feedback: {{session['feedback']}}</li>
+```
 
 - Flash messages without any html
-`    if form.validate_on_submit():
-        flash("You just clicked the button!")`
+
+```
+if form.validate_on_submit():
+        flash("You just clicked the button!")
+```
 
 - Trick to show flashed messages nicely in the template html file
-`  {# get_flashed_messages() is auto sent to the template with the flash() call #}
+
+```
+{# get_flashed_messages() is auto sent to the template with the flash() call #}
       {% for mess in get_flashed_messages()  %}
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
@@ -166,12 +187,13 @@ see below for sessions object used in thankyou, though not passed to it
         </button>
         {{mess}}
         </div>
-      {% endfor %}`
+      {% endfor %}
+```
 
 
 
 
-3. Flask forms 
+# Flask forms 
 ## - class definition - forms.py```
 from flask_wtf import FlaskForm
 from wtforms import (StringField, BooleanField, DateTimeField,
@@ -192,18 +214,20 @@ class AddForm(FlaskForm):
 ```
 
 #### Html - Dont forget the hidden tag
-```
+
+``` html
 <form method="POST">
 	
     {# This hidden_tag is a CSRF security feature. #}
     {{ form.hidden_tag() }}
     {{ form.breed.label }} {{ form.breed() }}
     {{ form.submit() }}
-</form>`
+</form>
 ```
 
-2. Flask Models (Classes used in data bases)
+# Flask Models (Classes used in data bases)
 - Initialization
+
 ```
 import os
 from flask import Flask
@@ -274,31 +298,37 @@ class Owner(db.Model):
         self.puppy_id = puppy_id
 ```
 
-- CRUD commands
-## Create
-`my_puppy = Puppy('Rufus',5)
+## CRUD commands
+### Create
+```
+my_puppy = Puppy('Rufus',5)
 db.session.add(my_puppy)
 db.session.commit()
 ```
-## Read
+
+### Read
 - Note lots of ORM filter options here.
 - filter(), filter_by(), limit(), order_by(), group_by()
 - Also lots of executor options
 - all(), first(), get(), count(), paginate()
 
-`all_puppies = Puppy.query.all() # list of all puppies in table
-print(all_puppies)`
+`all_puppies = Puppy.query.all() # list of all puppies in table print(all_puppies)`
 
 -  Grab by id
-`puppy_one = Puppy.query.get(1)
+```
+puppy_one = Puppy.query.get(1)
 print(puppy_one)
-print(puppy_one.age)`
+print(puppy_one.age)
+```
 
 - Filters
-`puppy_sam = Puppy.query.filter_by(name='Sammy') # Returns list
-print(puppy_sam)`
 
-## Update
+```
+puppy_sam = Puppy.query.filter_by(name='Sammy') # Returns list
+print(puppy_sam)
+```
+
+### Update
 - Grab your data, then modify it, then save the changes.
 
 ```
@@ -308,9 +338,10 @@ db.session.add(first_puppy)
 db.session.commit()
 ```
 
-## Delete
+### Delete
 
-```second_pup = Puppy.query.get(2)
+```
+second_pup = Puppy.query.get(2)
 db.session.delete(second_pup)
 db.session.commit()
 ```
@@ -641,7 +672,7 @@ class UpdateUserForm(FlaskForm):
 {% endif %}`
 ```
 
-5. Tips and tricks for configuration
+# Tips and tricks for configuration
 
 a. Static folder expose to internet
 `app = Flask(__name__, static_url_path='/static')`
