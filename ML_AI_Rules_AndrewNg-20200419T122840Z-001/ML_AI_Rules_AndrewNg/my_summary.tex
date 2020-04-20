@@ -1,0 +1,215 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\author{Karthik A}
+\title{Machine Learning -- Course summary notes and guidelines}
+\begin{document}
+
+
+\maketitle
+\part{Algorithms}
+\section{Supervised Learning}
+\subsection{Regression}
+Cost function:
+$$J(\theta) = \frac{1}{2m}\sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))^2  + \frac {\lambda}{2m}\sum_{j=1}^{n}\theta_{j}^2$$
+
+Gradient descent:
+Simultaneous update: $\{$
+
+$\theta_j := \theta_j - \frac {\alpha}{m}\frac {\partial }{\partial \theta_j}J(\theta) - \alpha \frac{\lambda}{m}\theta_j$
+
+$\}$
+
+
+Simultaneous update: $\{$
+
+$\theta_j := \theta_j - \frac {\alpha}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)})-y)x^{(i)}$
+
+$\}$
+
+
+For small $\alpha$, $J(\theta)$ should reduce with every iteration
+If polynomial regression, ensure feature scaling and mean normalization
+
+Replace each value with $(x-\mu)/s$ where $s=(x_{max}- x_{min})$ or s=Std Deviation
+
+\subsection{Logistic Regression}
+
+Logistic and cost function
+$$h_\theta(x) = \frac{1}{(1+e^-\theta^T X)}$$
+$$J(\theta) = -\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))]$$
+
+Simultaneous update: $\{$
+
+$\theta_j := \theta_j - \frac {\alpha}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)})-y)x^{(i)}$
+
+$\}$
+
+\subsection{Support Vector Machines (SVM)}
+\begin{itemize}
+\item if n is small (10k) and m is intermedeate (50k) use SVM. If n is small and m is large -- use logistic regression. Neural network is good for all but difficult to train
+\item In SVM $C=1/\lambda$
+\item Without kernel or linear regression SVM is logistic regression
+\end{itemize}
+
+\subsection{Neural Network}
+Back propogation - neural network terminology for minimizing our cost funtion
+$\delta = a -y$, where a is the activation value\\
+Layer L = Output layer\\
+Layer 1 = Input layer\\
+$s_j$ = units in layer j\\
+$a_i^{j}$ = activation of unit i in layer j\\
+$\Theta^{(j)}$ =matrix of weights controlling function mapping from layer j to layer j+1\\
+$a^{j+1} = g(\Theta^TX)$\\
+If $s_j$ units in layer j, $s_{j+1}$ units in layer $(j+1)$, then dimensions of $\Theta^{j}$ will be $s_{j+1}\times(s_{j}+1)$
+
+\section{Unsupervised Learning}
+\subsection{K Means and Dimensionality reduction}
+
+How to choose K in Kmeans 
+\begin{enumerate}
+\item $J(\theta)$ vs K -- see if it elbows out
+\item No good elbows, use the downstream purpose. For example, shirt sizes
+\end{enumerate}
+
+
+Dimensionality reduction
+\begin{itemize}
+\item Data compression
+\item Visualization
+\end{itemize}
+
+\[
+[U S V] = svd(\Sigma)    \;where , \Sigma  = (1/m)\sum (X*X^T)
+\]
+
+Determining number of dimensions k explaining variation of a target say 95\% 
+\[Explained\;Variation = 1 - \sum_{i=1}^k s_{ii}/\sum_{i=1}^n s_{ii}\]
+
+\subsection{Anomaly detection}
+Common applications : Fraud detection, Manufacturing, monitoring machines in a large cluster
+
+
+Differences between Anomaly detection and clustering
+\begin{enumerate}
+\item y=1 is very small , typically 0--20
+\item y=0 is a large number
+\item Different types of anamolies exist which are not known upfront
+\end{enumerate}
+
+Some tips for anomaly detection
+\begin{itemize}
+\item Add a few failed samples to CV and test, do a $F_1$ score and evaluate the $\epsilon$ values
+\item When features are not gaussian distributed, use the $x^{(1/10)}$ or $x^{(1/2)}$  or $log(x)$ etc and make gaussian
+\item When encountering common problem that p(x) is similar to regular in muti dimensions try,
+\subitem --Introducing features such as \\$CPU Load/network traffic$ or \\$(CPU load)^2/network traffic$
+\subitem --Use multivariate gaussian - automatically captures the correlation between features but is computationally expensive (also m \textgreater n else $\Sigma$ is not inversible)
+\end{itemize}
+
+\section{Recommend-er systems and COllaborative FIltering}
+
+$n_u$ = number of users (columns)(j)
+$n_m$ = number of movies (i)
+$r(i,j) = 1$ if user j has rated movie i
+
+X = hypothetical or real vector such as Genre - action, comedy each being a column $x^1$ or $x^2$ or $x^n$
+$m^j$ = number of movies rated by user j
+
+In COFI , X is also not known
+\begin{itemize}
+\item min $\theta$  = $\sum_i \sum _n$  and get the double gradient over X and $\theta$
+\item Initialize with small random values
+\item Feature scaling is not required as the rating scale is always same across uses but mean normalization helps faster convergence
+
+\end{itemize}
+
+
+
+\part{Practical suggestions for machine learning}
+\section{Model selection and refinement}
+
+\subsection{Over--fitting problem}
+\begin{itemize}
+\item Reduce the number of features
+\item Use the model selection algorithm described later
+\item Use regularization to reduce the magnitude of theta ($\lambda$ high)
+\end{itemize}
+
+\subsection{Model selection}
+60\%--20\%--20\% is a broad split for the train, cross validation and test sets
+
+\begin{enumerate}
+\item Get  the polynomial degree -- Find $J(\theta)$ for each increasing polynomial feature. Test on CV to fix the polynomial features. Check on test 
+\item If underfit reduce $\lambda$, if overfit , increase $\lambda$ \-- check the error on the CV set to fix the lambda value
+\item To determine whether more or less data,  review the learning curves i.e plot the $J_{cv}$ and $J_{train}$ against increasing number of examples
+\subitem ---- if $J_{cv}$ and $J_{train}$ are converging with less samples and the value is high, then it is High Bias problem and adding more data to the problem will not help
+\subitem ---- if $J_{cv}$ and $J_{train}$ are different, then adding more samples will help them converge \-- high variance problem
+\item Error Analysis: General guideline, start with a simple algorithm and then increase the number of features. Manually examine the errors on examples in the cross validation set and try to spot a trend where most of the errors were made. We can find some feaures that may be useful
+\end{enumerate}
+
+\subsection{Types of actions possible}
+\begin{enumerate}
+\item Collect more data -- High variance
+\item Try smaller set of features -- High Variance
+\item Try additional features -- High Bias
+\item Try polynomial features -- High Bias
+\item Increasing $\lambda$ -- High Variance
+\item Decreasing $\lambda$ -- High Bias
+\end{enumerate}
+
+
+
+\section{Pipeline Analysis}
+Example of pipeline for machine learning is given below:
+Image $\rightarrow$ text detection $\rightarrow$ Character segmentation $\rightarrow$ Character recognition
+
+
+\begin{itemize}
+\item Sliding windows - step size or stride
+\item 1D sliding window for char segmentation
+\item Get lots of data and artificial data
+\end{itemize}
+
+\section{Rules for getting more data}
+\begin{itemize}
+\item Make sure you have a low bias classifier before starting data collection eg. add more features or hidden units in a neural network until bias is low
+\item Estimate data collection effort
+\item Ceiling analysis - which part of the pipeline must I improve - Look at the accuracy in the test set by feeding the $y_{actual}$ to the next part of the pipeline and see how it improves - delta accuracy should be used to determine where to put the effort
+\end{itemize}
+
+
+\section{Learning with large data sets}
+\begin{itemize}
+\item \emph{It is not who has the best algorithm that wins but who has the most data. The problem with large data sets is that gradient descent is computationally expensive for each iteration} 
+\item Plot the learning curve and if high bias and J is ok, no need to do on the full data set (m) as it will converge before then -- adding more samples has no benefit
+\item If high variance use map reduce -- i.e split the summation into separate machines
+
+\end{itemize}
+
+
+\subsection{Stochastic gradient} 
+\begin{itemize}
+\item Stochastic gradient - Do gradient descent with m=1 after shuffling the data set
+\item Mini batch - do gradient descent in batches b \textless m
+\item Batch gradient descent - full m
+\end{itemize}
+
+Plot J over number of iterations and average over the batch sizes
+\begin{enumerate}
+\item Gets smoother with smaller $\alpha$
+\item Gets smoother with larger b
+\item Clarifies with larger b if there is a lot of zig-zag in the chart
+\item If J increases with b, use smaller $\alpha$
+\item interesting but not often used is reducing $\alpha$ with iterations = $\alpha = const/(const+iterations)$
+
+\end{enumerate}
+
+Online learning is extreme example where the data is taken evaluated and dropped immediately
+
+$P(y=1|r;\theta)$ - predicted CTR (Click Through Rate)
+
+
+
+\end{document}

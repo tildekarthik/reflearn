@@ -1,3 +1,4 @@
+
 # These are my course notes for later reference - Not my original work
 ## The course is : Udemy : Python and Flask Bootcamp by Jose Portilla - He is the author
 ### I use this as my cut-paste reference sheet - kindof snippets :-)
@@ -469,7 +470,7 @@ def add():
 ## Main app and views
 - Note there is no logout page - once logged out sent to home - only a flash message
 
-```
+``` python
 from myproject import app,db
 from flask import render_template, redirect, request, url_for, flash,abort
 from flask_login import login_user,login_required,logout_user
@@ -547,7 +548,7 @@ if __name__ == '__main__':
 
 ## Add the following to the `__init__.py`
 
-```
+``` python
 from flask_login import LoginManager
 # Create a login manager object
 login_manager = LoginManager()
@@ -555,7 +556,7 @@ login_manager = LoginManager()
 
 After you do the usual `app=Flask(__name__)` , database etc upto Migrate, insert
 
-```
+``` python
 # We can now pass in our app to the login manager
 login_manager.init_app(app)
 # Tell users what view to go to when they need to login.
@@ -644,7 +645,6 @@ class UpdateUserForm(FlaskForm):
             raise ValidationError('Your username has been registered already!')
 
 ```
-
 ## Add to html for register
 
 ```

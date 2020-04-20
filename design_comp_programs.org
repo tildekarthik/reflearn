@@ -1,0 +1,41 @@
+#+TITLE: Design of computer programs
+
+
+* Follow the steps in any problem
+1. Understand the problem
+2. Specify the solution - concept inventory, representation
+- Start with data types functions in english during the specification (which is best way ex. dictionary or list or strings etc)
+3. Design / Code
+
+* Learnings from Poker
+- Important to write the test before writing the function
+- Search if the base python library has a solution ex. max has key argument, using index to a string search
+- Write simple comments for each function
+- Changes to the program should impact only the areas which are defined by the change (one concept change should impact only 1 place)
+
+* Programming dimensions and figuring next steps
+- Programs evolve over time over many axis
+- Correctness and efficiency being two axis
+- Features being third
+- Elegance is NOT optional - famous quote - itys - clarity, simplicity, generality, dont repeat yourself (Readability??)
+  - Elegance axis improvement without change in correctness, efficiency or features - then why do it
+    - Buying time in future to maintain and improve
+      - "Best is the enemy of the good" Code! - make the right tradeoff by evaluating which dimension the program needs
+- Elegance dimension is often called refactoring
+- When possible use compute functions and not doing functtions (subroutines) - More difficult to test subroutines as they require you to setup the initial state run and check the final step
+
+* Programming aspects
+- Can we separate the code that contributes to correctness, efficiency and debugging be separated
+- Do a calculation of the approx time - generally a computer does ~bill per sec so millions means fast , billions or trillions means redo
+- build tools - like timing, counts
+
+
+* Other concepts in python
+- key argument in max function
+- List comprehensions [s<term> for condition <optional> for and if conditions] eval after the term left to right and term is eval last
+- Generator expressions (StopIteration error) - uses ( not [ , state next(gexp)
+- Generator functions (yield)
+- Passing in functions and arguments as *args - how it does tuple packing and unpacking
+- tbl = string.maketrans('ABC','123');  f.translate(tbl)
+- profiling - time taken to run the programs python -m cProfile crypt.py or from within python import cProfile;cProfile.run(test.py)
+- simpler ones time.clock()
