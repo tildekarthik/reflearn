@@ -10,8 +10,8 @@ def valid(expr):
         return False
 
 def solve(formula):
-    fillins = fill_in(formula)
-    for f in fillins:
+    fill_ins = fill_in(formula)
+    for f in fill_ins:
         if valid(f):
             return f     
 
